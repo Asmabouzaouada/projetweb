@@ -8,17 +8,43 @@ require __DIR__ . '/../config.php';
 class produitC
 {
 
-    public function listProduits()
+    // public function listProduits()
+    // {
+    //     $sql = "SELECT * FROM produit";
+    //     $db = config::getConnexion();
+    //     try {
+    //         $liste = $db->query($sql);
+    //         return $liste;
+    //     } catch (Exception $e) {
+    //         die('Error:' . $e->getMessage());
+    //     }
+    // }
+    public function listProduits($category = null)
     {
         $sql = "SELECT * FROM produit";
+
+        // If a category is provided, add a WHERE clause to filter by category
+        if ($category !== null && $category !== 'all') {
+            $sql .= " WHERE categorie = :category";
+        }
+
         $db = config::getConnexion();
         try {
-            $liste = $db->query($sql);
+            $query = $db->prepare($sql);
+
+            // Bind the category parameter if it is provided
+            if ($category !== null && $category !== 'all') {
+                $query->bindValue(':category', $category);
+            }
+
+            $query->execute();
+            $liste = $query->fetchAll();
             return $liste;
         } catch (Exception $e) {
             die('Error:' . $e->getMessage());
         }
     }
+
 
     function deleteproduct($id_prod)
     {

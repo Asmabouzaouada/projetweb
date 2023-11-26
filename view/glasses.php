@@ -41,7 +41,8 @@
    <?php include "../controller/produitC.php";
    include "../model/produit.php";
    $c = new produitC();
-   $tab = $c->listProduits();
+   // $tab = $c->listProduits();
+   $tab = $c->listProduits(isset($_GET['category']) ? $_GET['category'] : null);
    error_reporting(E_ALL);
    ini_set('display_errors', 1);
    ?>
@@ -121,7 +122,7 @@
       <div class="row justify-content-center"> <!-- Center the content within the row -->
          <div class="col-md-2">
 
-            <div class="dropdown">
+            <!-- <div class="dropdown">
                <button class="btn btn-secondary dropdown-toggle" type="button" id="categoriesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Categories
                </button>
@@ -130,7 +131,24 @@
                   <a class="dropdown-item" href="pour_femme1.html">Pour Femmes</a>
                   <a class="dropdown-item" href="pour_homme1.html">Pour Hommes</a>
                </div>
+            </div> -->
+            <div class="dropdown">
+               <button class="btn btn-secondary dropdown-toggle" type="button" id="categoriesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Categories
+               </button>
+               <div class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                  <a class="dropdown-item" href="?category=all">All</a>
+                  <a class="dropdown-item" href="?category=A">Category A</a>
+                  <a class="dropdown-item" href="?category=B">Category B</a>
+                  <a class="dropdown-item" href="?category=C">Category C</a>
+                  <a class="dropdown-item" href="?category=D">Category D</a>
+                  <a class="dropdown-item" href="?category=E">Category E</a>
+                  <a class="dropdown-item" href="?category=F">Category F</a>
+            
+               </div>
             </div>
+           
+
          </div>
       </div>
       <div class="container-fluid">
