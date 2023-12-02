@@ -22,6 +22,10 @@ class produit
     }
 
 
+
+
+    
+    
     public function getIdProduit()
     {
         return $this->id_prod;

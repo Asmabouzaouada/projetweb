@@ -71,11 +71,11 @@ class produitC
             throw new Exception('Missing information');
         }
 
-        // Validate category
-        $validCategories = ['A', 'B', 'C', 'D', 'E', 'F'];
-        if (!in_array(strtoupper($produit->getcategorie()), $validCategories)) {
-            throw new Exception('Invalid category. Category must be A, B, C, D, E, or F.');
-        }
+        // // Validate category
+        // $validCategories = ['A', 'B', 'C', 'D', 'E', 'F'];
+        // if (!in_array(strtoupper($produit->getcategorie()), $validCategories)) {
+        //     throw new Exception('Invalid category. Category must be A, B, C, D, E, or F.');
+        // }
 
 
         $sql = "INSERT INTO produit  

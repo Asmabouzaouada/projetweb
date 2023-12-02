@@ -102,36 +102,46 @@ if (
             margin-bottom: 15px;
         }
     </style>
-   <script>
-    function validateForm() {
-        var nom_prod = document.getElementById("nom_prod").value;
-        var image_prod = document.getElementById("image_prod").value;
-        var quantite = document.getElementById("quantite").value;
-        var categorie = document.getElementById("categorie").value;
-        var prix_prod = document.getElementById("prix_prod").value;
+    <script>
+        function validateForm() {
+            var nom_prod = document.getElementById("nom_prod").value;
+            var image_prod = document.getElementById("image_prod").value;
+            var quantite = document.getElementById("quantite").value;
+            var categorie = document.getElementById("categorie").value;
+            var prix_prod = document.getElementById("prix_prod").value;
 
-        // Check for missing fields
-        if (nom_prod === '' || image_prod === '' || quantite === '' || categorie === '' || prix_prod === '') {
-            alert("Please fill in all fields");
-            return false;
+            // Check for missing fields
+            if (nom_prod === '' || image_prod === '' || quantite === '' || categorie === '' || prix_prod === '') {
+                alert("Please fill in all fields");
+                return false;
+            }
+
+            // Validate category
+            // var validCategories = ['A', 'B', 'C', 'D', 'E', 'F'];
+            // if (validCategories.indexOf(categorie.toUpperCase()) === -1) {
+            //     alert("Invalid category. Category must be A, B, C, D, E, or F.");
+            //     return false;
+            // }
+
+            // If all checks pass, allow the form to be submitted
+            return true;
         }
-
-        // Validate category
-        var validCategories = ['A', 'B', 'C', 'D', 'E', 'F'];
-        if (validCategories.indexOf(categorie.toUpperCase()) === -1) {
-            alert("Invalid category. Category must be A, B, C, D, E, or F.");
-            return false;
-        }
-
-        // If all checks pass, allow the form to be submitted
-        return true;
-    }
-</script>
+    </script>
 
 
 </head>
 
 <body>
+    <?php require_once "../controller/categorieC.php";
+    $CategorieC = new categorieC;
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['categorie']) && isset($_POST['search'])) {
+            $id_categorie = $_POST['categorie'];
+            $list = $CategorieC->afficherProduit($id_categorie);
+        }
+    }
+    ?>
+
     <div class="container">
         <h2>Add Product</h2>
 
@@ -149,15 +159,27 @@ if (
             <label for="quantite">Quantité:</label>
             <input type="text" id="quantite" name="quantite" required>
 
-            <label for="categorie">Catégorie:</label>
-            <input type="text" id="categorie" name="categorie" required>
+
+
 
             <label for="prix_prod">Prix du produit:</label>
             <input type="text" id="prix_prod" name="prix_prod" required>
 
             <label for="descrip">Description du produit:</label>
             <input type="text" id="descrip" name="descrip" required>
+            <div class="dropdown">
 
+                <?php
+                $categoriess = $CategorieC->afficherCategories();
+                ?>
+                <label for="categorie">Categorie :</label>
+                <select name="categorie" id="categorie">
+                    <?php
+                    foreach ($categoriess as $categ) {
+                        echo '<option value="' . $categ['id_categorie'] . '">' . $categ['nom_categorie'] . '</option>';
+                    }
+                    ?>
+            </div>
             <input type="submit" value="Save">
             <input type="reset" value="Reset">
         </form>
@@ -165,4 +187,3 @@ if (
 </body>
 
 </html>
-

@@ -38,9 +38,27 @@
 <!-- body -->
 
 <body class="main-layout position_head">
-   <?php include "../controller/produitC.php";
+   <?php require_once "../controller/produitC.php";
    include "../model/produit.php";
+   require_once "../controller/categorieC.php";
+   $CategorieC = new categorieC;
    $c = new produitC();
+   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if (isset($_POST['categorie']) && isset($_POST['search'])) {
+         $id_categorie = $_POST['categorie'];
+         if ($id_categorie == 'all') {
+            // Retrieve and display all products
+            $list = $c->listProduits();
+         } else {
+            // Retrieve and display products based on the selected category
+            $list = $CategorieC->afficherProduit($id_categorie);
+         }
+      }
+      // $list = $CategorieC->afficherProduit($id_categorie);
+   }
+
+
+
    // $tab = $c->listProduits();
    $tab = $c->listProduits(isset($_GET['category']) ? $_GET['category'] : null);
    error_reporting(E_ALL);
@@ -132,7 +150,7 @@
                   <a class="dropdown-item" href="pour_homme1.html">Pour Hommes</a>
                </div>
             </div> -->
-            <div class="dropdown">
+            <!-- <div class="dropdown">
                <button class="btn btn-secondary dropdown-toggle" type="button" id="categoriesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Categories
                </button>
@@ -146,12 +164,47 @@
                   <a class="dropdown-item" href="?category=F">Category F</a>
             
                </div>
+            </div> -->
+            <?php
+            $categoriess = $CategorieC->afficherCategories();
+            ?>
+            <div class="dropdown">
+               <form action="" method="POST">
+                  <label for="categorie">Sélectionner une categorie</label>
+                  <select name="categorie" id="categorie">
+                     <option value="all">Tous les produits</option>
+                     <?php
+                     foreach ($categoriess as $categ) {
+                        echo '<option value="' . $categ['id_categorie'] . '">' . $categ['nom_categorie'] . '</option>';
+                     }
+                     ?>
+                  </select>
+                  <input type="submit" value="Rechercher" name="search">
+               </form>
             </div>
-           
-
          </div>
       </div>
       <div class="container-fluid">
+         <div class="row">
+            <?php if (isset($list)) { ?>
+               <br>
+               <?php foreach ($list as $produit) { ?>
+                  <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+                     <div class="glasses_box">
+                        <figure><img src="<?php echo $produit['image_prod']; ?>" alt="#" /></figure>
+                        <h3>
+                           <?= $produit['prix_prod']; ?>
+                           <span class="blu">TND</span>
+                        </h3>
+                        <p><?= $produit['nom_prod']; ?></p>
+                        <p><?= $produit['descrip']; ?></p>
+                     </div>
+                  </div>
+               <?php } ?>
+            <?php  } ?>
+         </div>
+      </div>
+      <!-- <div class="container-fluid">
          <div class="row">
             <?php
             foreach ($tab as $produit) {
@@ -173,7 +226,7 @@
             ?>
 
          </div>
-      </div>
+      </div> -->
    </div>
    <!-- end Our  Glasses section -->
    <!--  footer -->
