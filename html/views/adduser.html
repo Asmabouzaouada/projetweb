@@ -1,0 +1,61 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user </title>
+</head>
+
+<body>
+    <a href="listuser.php">Back to list </a>
+    <hr>
+
+    <div id="error">
+        <?php echo $error; ?>
+    </div>
+
+    <form action="" method="POST">
+        <table>
+            <tr>
+                <td><label for="pseudo">pseudo :</label></td>
+                <td>
+                    <input type="text" id="pseudo" name="pseudo" />
+                    <span id="erreurNom" style="color: red"></span>
+                </td>
+            </tr>
+            
+            <tr>
+                <td><label for="email">Email :</label></td>
+                <td>
+                    <input type="text" id="email" name="email" />
+                    <span id="erreurEmail" style="color: red"></span>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="password">psw:</label></td>
+                <td>
+                    <input type="password" id="password" name="password" />
+                    <span id="erreurPsw" style="color: red"></span>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="role">role :</label></td>
+                <td>
+                    <input type="number" id="role" name="role" />
+                    <span id="erreurrole" style="color: red"></span>
+                </td>
+            </tr>
+
+
+            <td>
+                <input type="submit" value="Save">
+            </td>
+            <td>
+                <input type="reset" value="Reset">
+            </td>
+        </table>
+
+    </form>
+</body>
+
+</html>
