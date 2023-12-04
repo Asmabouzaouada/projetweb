@@ -30,9 +30,11 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   <script src="/view/jquery-3.2.1.min.js"></script>
+   <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
 
 </head>
 <!-- body -->
@@ -43,18 +45,41 @@
    require_once "../controller/categorieC.php";
    $CategorieC = new categorieC;
    $c = new produitC();
-   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if (isset($_POST['categorie']) && isset($_POST['search'])) {
+   $id_categorie = 'all';
+   $sort = null;
+
+   if ($_SERVER["REQUEST_METHOD"] == "POST") { //echo "Form submitted!";
+      // if (isset($_POST['categorie']) && isset($_POST['search'])) {
+      //    $id_categorie = $_POST['categorie'];
+      //    if ($id_categorie == 'all') {
+      //       // Retrieve and display all products
+      //       $list = $c->listProduits();
+      //    } else {
+      //       // Retrieve and display products based on the selected category
+      //       $list = $CategorieC->afficherProduit($id_categorie);
+      //    }
+      // }
+      $list = $c->listProduits();
+      if (isset($_POST['categorie'])) {
          $id_categorie = $_POST['categorie'];
-         if ($id_categorie == 'all') {
-            // Retrieve and display all products
-            $list = $c->listProduits();
+
+         // Check if sorting is applied
+         if (isset($_POST['apply_sort'])) {
+            $sort = $_POST['sort'];
+            //$list = $c->listProduits($id_categorie, $sort);
+            $list = $c->listProduits(isset($_GET['category']) ? $_GET['category'] : null, 'asc');
+
          } else {
-            // Retrieve and display products based on the selected category
-            $list = $CategorieC->afficherProduit($id_categorie);
+            // By default, retrieve and display products based on the selected category
+            if ($id_categorie == 'all') {
+               $list = $c->listProduits();
+            } else {
+               $list = $CategorieC->afficherProduit($id_categorie);
+            }
          }
+      } if (!isset($_POST['categorie'])) {
+         $id_categorie = 'all';
       }
-      // $list = $CategorieC->afficherProduit($id_categorie);
    }
 
 
@@ -133,9 +158,15 @@
             <div class="col-md-10 offset-md-1">
                <div class="titlepage">
                   <h2>Our Glasses</h2>
+                  <form action="" method="POST">
+                     <input type="hidden" name="sort" value="asc">
+                     <input type="submit" value="Tri par prix" name="apply_sort">
+                  </form>
                </div>
             </div>
          </div>
+
+
       </div>
       <div class="row justify-content-center"> <!-- Center the content within the row -->
          <div class="col-md-2">
@@ -169,23 +200,36 @@
             $categoriess = $CategorieC->afficherCategories();
             ?>
             <div class="dropdown">
+
+
                <form action="" method="POST">
                   <label for="categorie">Sélectionner une categorie</label>
                   <select name="categorie" id="categorie">
-                     <option value="all">Tous les produits</option>
+                     <option value="all" <?php echo ($id_categorie == 'all' || !isset($_POST['search'])) ? 'selected' : ''; ?>>Tous les produits</option>
                      <?php
                      foreach ($categoriess as $categ) {
-                        echo '<option value="' . $categ['id_categorie'] . '">' . $categ['nom_categorie'] . '</option>';
+                        $selected = ($categ['id_categorie'] == $id_categorie) ? 'selected' : '';
+                        echo '<option value="' . $categ['id_categorie'] . '" ' . $selected . '>' . $categ['nom_categorie'] . '</option>';
                      }
                      ?>
                   </select>
                   <input type="submit" value="Rechercher" name="search">
                </form>
+
+
+
             </div>
+
+
          </div>
       </div>
+      <!-- <div class="col-md-4">
+
+         <input type="text" id="myInput" placeholder="Search for product.." title="Type in a name"><br />
+      </div> -->
+
       <div class="container-fluid">
-         <div class="row">
+         <div class="row" id="list">
             <?php if (isset($list)) { ?>
                <br>
                <?php foreach ($list as $produit) { ?>
@@ -196,7 +240,7 @@
                            <?= $produit['prix_prod']; ?>
                            <span class="blu">TND</span>
                         </h3>
-                        <p><?= $produit['nom_prod']; ?></p>
+                        <p class="name"><?= $produit['nom_prod']; ?></p>
                         <p><?= $produit['descrip']; ?></p>
                      </div>
                   </div>
@@ -204,29 +248,8 @@
             <?php  } ?>
          </div>
       </div>
-      <!-- <div class="container-fluid">
-         <div class="row">
-            <?php
-            foreach ($tab as $produit) {
-            ?>
 
-               <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-                  <div class="glasses_box">
-                     <figure><img src="<?php echo $produit['image_prod']; ?>" alt="#" /></figure>
-                     <h3>
-                        <?= $produit['prix_prod']; ?>
-                        <span class="blu">TND</span>
-                     </h3>
-                     <p><?= $produit['nom_prod']; ?></p>
-                     <p><?= $produit['descrip']; ?></p>
-                  </div>
-               </div>
-            <?php
-            }
-            ?>
 
-         </div>
-      </div> -->
    </div>
    <!-- end Our  Glasses section -->
    <!--  footer -->
@@ -264,6 +287,28 @@
    <!-- sidebar -->
    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
    <script src="js/custom.js"></script>
+   <script>
+      var input = document.getElementById("myInput");
+      input.addEventListener("input", myFunction);
+
+      function myFunction(e) {
+         var filter = e.target.value.toUpperCase();
+
+         var list = document.getElementById("list");
+         var divs = list.getElementsByTagName("div");
+         for (var i = 0; i < divs.length; i++) {
+            var a = divs[i].getElementsByTagName("a")[0];
+
+            if (a) {
+               if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                  divs[i].style.display = "";
+               } else {
+                  divs[i].style.display = "none";
+               }
+            }
+         }
+      }
+   </script>
 
 </body>
 

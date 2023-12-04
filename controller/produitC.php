@@ -8,42 +8,61 @@ require __DIR__ . '/../config.php';
 class produitC
 {
 
-    // public function listProduits()
-    // {
-    //     $sql = "SELECT * FROM produit";
-    //     $db = config::getConnexion();
-    //     try {
-    //         $liste = $db->query($sql);
-    //         return $liste;
-    //     } catch (Exception $e) {
-    //         die('Error:' . $e->getMessage());
-    //     }
-    // }
-    public function listProduits($category = null)
-    {
-        $sql = "SELECT * FROM produit";
+    public function listProduits($category = null, $sort = null)
+{
+    $sql = "SELECT * FROM produit";
 
-        // If a category is provided, add a WHERE clause to filter by category
-        if ($category !== null && $category !== 'all') {
-            $sql .= " WHERE categorie = :category";
-        }
-
-        $db = config::getConnexion();
-        try {
-            $query = $db->prepare($sql);
-
-            // Bind the category parameter if it is provided
-            if ($category !== null && $category !== 'all') {
-                $query->bindValue(':category', $category);
-            }
-
-            $query->execute();
-            $liste = $query->fetchAll();
-            return $liste;
-        } catch (Exception $e) {
-            die('Error:' . $e->getMessage());
-        }
+    // If a category is provided, add a WHERE clause to filter by category
+    if ($category !== null && $category !== 'all') {
+        $sql .= " WHERE categorie = :category";
     }
+
+    // If a sort order is provided, add an ORDER BY clause for sorting by price
+    if ($sort !== null && ($sort === 'asc' || $sort === 'desc')) {
+        $sql .= " ORDER BY prix_prod $sort";
+    }
+
+    $db = config::getConnexion();
+    try {
+        $query = $db->prepare($sql);
+
+        // Bind the category parameter if it is provided
+        if ($category !== null && $category !== 'all') {
+            $query->bindValue(':category', $category);
+        }
+
+        $query->execute();
+
+        $liste = $query->fetchAll();
+
+        // If you want statistics, call the listProduitsStatistics function here
+        $statistics = $this->listProduitsStatistics($db);  
+        // Add this line
+
+        // Now, you can use $statistics to get statistics for your chart
+        // For example, you can pass $statistics to your template engine or return it directly
+
+        return $liste;
+    } catch (Exception $e) {
+        die('Error:' . $e->getMessage());
+    }
+}
+
+public function listProduitsStatistics($db)
+{
+    try {
+        // Add code here to fetch statistics for the number of products in each category
+        // You can use a similar approach as in the previous examples
+        $sql = "SELECT categorie, COUNT(*) as productCount FROM produit GROUP BY categorie";
+        $query = $db->prepare($sql);
+        $query->execute();
+        $statistics = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $statistics;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+}
 
 
     function deleteproduct($id_prod)
@@ -128,7 +147,7 @@ class produitC
 
 
     function updateproduct($produit, $id_produit)
-    { 
+    {
         $validCategories = ['A', 'B', 'C', 'D', 'E', 'F'];
         if (!in_array(strtoupper($produit->getcategorie()), $validCategories)) {
             throw new Exception('Invalid category. Category must be A, B, C, D, E, or F.');
@@ -156,10 +175,10 @@ class produitC
                 'descrip' => $produit->getDescrip(),
             ]);
 
-         echo $query->rowCount() . " records UPDATED successfully <br>";
+            echo $query->rowCount() . " records UPDATED successfully <br>";
         } catch (PDOException $e) {
             //echo 'Error: ' . $e->getMessage(); // Output the error message
-            
+
         }
     }
 }

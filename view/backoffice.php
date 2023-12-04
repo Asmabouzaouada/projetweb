@@ -21,5 +21,8 @@
     <button>Mettre à jour des produits</button>
 </a>
 
+<a href="statistiques.html">
+    <button>Statistiques</button>
+</a>
 </body>
 </html>
