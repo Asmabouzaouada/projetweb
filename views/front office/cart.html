@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Style simple pour la mise en page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #panier {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #panier th, #panier td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #panier th {
+            background-color: #f2f2f2;
+        }
+
+        .supprimer {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        // Exemple de panier
+        let panier = [
+            { id: 1, nom: "Produit 1", prix: 20 },
+            { id: 2, nom: "Produit 2", prix: 30 },
+            { id: 3, nom: "Produit 3", prix: 15 }
+        ];
+
+        // Fonction pour afficher le panier dans le tableau HTML
+        function afficherPanier() {
+            let tableau = document.getElementById("panier");
+            // Effacer le contenu du tableau
+            tableau.innerHTML = "";
+
+            // Ajouter une ligne d'en-tête
+            let ligneEnTete = tableau.insertRow(0);
+            ligneEnTete.innerHTML = "<th>ID</th><th>Nom du Produit</th><th>Prix</th><th>Action</th>";
+
+            // Ajouter chaque produit au tableau
+            panier.forEach((produit, index) => {
+                let ligne = tableau.insertRow(index + 1);
+                ligne.innerHTML = `<td>${produit.id}</td><td>${produit.nom}</td><td>${produit.prix}</td><td><button class="supprimer" onclick="supprimerDuPanier(${index})">Supprimer</button></td>`;
+            });
+        }
+
+        // Fonction pour supprimer un produit du panier
+        function supprimerDuPanier(index) {
+            panier.splice(index, 1);
+            afficherPanier();
+        }
+
+        // Appeler la fonction pour afficher le panier au chargement de la page
+        window.onload = afficherPanier;
+    </script>
+</head>
+<body>
+
+    <h2>Mon Panier</h2>
+    <table id="panier"></table>
+
+</body>
+</html>

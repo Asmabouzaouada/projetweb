@@ -1,6 +1,6 @@
 <?php
 
-class config
+class Config
 {
     private static $pdo = null;
 
@@ -9,7 +9,7 @@ class config
         if (!isset(self::$pdo)) {
             try {
                 self::$pdo = new PDO(
-                    'mysql:host=localhost;dbname=commande',
+                    'mysql:host=localhost;dbname=commande1',
                     'root',
                     '',
                     [
@@ -17,7 +17,7 @@ class config
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                     ]
                 );
-                //echo "connected successfully";
+                // echo "connected successfully";
             } catch (Exception $e) {
                 die('Erreur: ' . $e->getMessage());
             }
@@ -27,6 +27,4 @@ class config
 }
 
 // Utilisation de la connexion
-$pdoInstance = config::getConnexion();
-
-// Maintenant, $pdoInstance contient l'instance de PDO que vous pouvez utiliser dans le reste de votre code.
+//$pdoInstance = Config::getConnexion();
