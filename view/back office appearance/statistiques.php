@@ -36,12 +36,7 @@ var ctx = document.getElementById('categoryChart').getContext('2d');
 var categoryChart = new Chart(ctx, {
     type: 'pie',
     data: {
-            labels: categoryData.map(item => {
-                // Assign colors based on category names
-                if (item.categorie === 'Femmes') return 'Pour Femmes';
-                else if (item.categorie === 'Hommes') return 'Pour Hommes';
-                else if (item.categorie === 'Enfants') return 'Pour Enfants';
-            }),
+            labels: ['pour femmes','pour hommes','pour enfants '], 
             datasets: [{
                 data: categoryData.map(item => item.productCount),
                 backgroundColor: [
@@ -53,6 +48,7 @@ var categoryChart = new Chart(ctx, {
             }]
         }
     });
+
 </script>
 </script>
 
