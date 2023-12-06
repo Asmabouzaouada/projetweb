@@ -46,38 +46,23 @@
    $CategorieC = new categorieC;
    $c = new produitC();
    $id_categorie = 'all';
-   $sort = null;
+   //$sort = null;
 
-   if ($_SERVER["REQUEST_METHOD"] == "POST") { //echo "Form submitted!";
-      // if (isset($_POST['categorie']) && isset($_POST['search'])) {
-      //    $id_categorie = $_POST['categorie'];
-      //    if ($id_categorie == 'all') {
-      //       // Retrieve and display all products
-      //       $list = $c->listProduits();
-      //    } else {
-      //       // Retrieve and display products based on the selected category
-      //       $list = $CategorieC->afficherProduit($id_categorie);
-      //    }
-      // }
+   if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $list = $c->listProduits();
       if (isset($_POST['categorie'])) {
          $id_categorie = $_POST['categorie'];
 
-         // Check if sorting is applied
-         if (isset($_POST['apply_sort'])) {
-            $sort = $_POST['sort'];
-            //$list = $c->listProduits($id_categorie, $sort);
-            $list = $c->listProduits(isset($_GET['category']) ? $_GET['category'] : null, 'asc');
-
-         } else {
-            // By default, retrieve and display products based on the selected category
+         {
+            // all products with selected category
             if ($id_categorie == 'all') {
                $list = $c->listProduits();
             } else {
                $list = $CategorieC->afficherProduit($id_categorie);
             }
          }
-      } if (!isset($_POST['categorie'])) {
+      }
+      if (!isset($_POST['categorie'])) {
          $id_categorie = 'all';
       }
    }
@@ -158,10 +143,10 @@
             <div class="col-md-10 offset-md-1">
                <div class="titlepage">
                   <h2>Our Glasses</h2>
-                  <form action="" method="POST">
+                  <!-- <form action="" method="POST">
                      <input type="hidden" name="sort" value="asc">
                      <input type="submit" value="Tri par prix" name="apply_sort">
-                  </form>
+                  </form> -->
                </div>
             </div>
          </div>
@@ -287,28 +272,7 @@
    <!-- sidebar -->
    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
    <script src="js/custom.js"></script>
-   <script>
-      var input = document.getElementById("myInput");
-      input.addEventListener("input", myFunction);
 
-      function myFunction(e) {
-         var filter = e.target.value.toUpperCase();
-
-         var list = document.getElementById("list");
-         var divs = list.getElementsByTagName("div");
-         for (var i = 0; i < divs.length; i++) {
-            var a = divs[i].getElementsByTagName("a")[0];
-
-            if (a) {
-               if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                  divs[i].style.display = "";
-               } else {
-                  divs[i].style.display = "none";
-               }
-            }
-         }
-      }
-   </script>
 
 </body>
 

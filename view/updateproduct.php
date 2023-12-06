@@ -5,9 +5,8 @@ include '../model/produit.php';
 $error = "";
 
 
-// create product
+
 $produit = null;
-// create an instance of the controller
 $produitC = new produitC();
 
 
@@ -55,9 +54,77 @@ if (
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Display</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="reset"] {
+            background-color: #f44336;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #error {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 
 <body>
+    <?php require_once "../controller/categorieC.php";
+    $CategorieC = new categorieC;
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['categorie']) && isset($_POST['search'])) {
+            $id_categorie = $_POST['categorie'];
+            $list = $CategorieC->afficherProduit($id_categorie);
+        }
+    }
+    ?>
     <button><a href="back office appearance/preferences.php">Back to list</a></button>
     <hr>
 
@@ -102,13 +169,6 @@ if (
                         <span id="erreurquantite" style="color: red"></span>
                     </td>
                 </tr>
-                <tr>
-                    <td><label for="categorie">Catégorie :</label></td>
-                    <td>
-                        <input type="text" id="categorie" name="categorie" value="<?php echo htmlspecialchars($produit['categorie']) ?>" />
-                        <span id="erreurcategorie" style="color: red"></span>
-                    </td>
-                </tr>
 
                 <tr>
                     <td><label for="prix_prod">Prix :</label></td>
@@ -117,6 +177,20 @@ if (
                         <span id="erreurPrix" style="color: red"></span>
                     </td>
                 </tr>
+
+                <div class="dropdown">
+
+                    <?php
+                    $categoriess = $CategorieC->afficherCategories();
+                    ?>
+                    <label for="categorie">Categorie :</label>
+                    <select name="categorie" id="categorie">
+                        <?php
+                        foreach ($categoriess as $categ) {
+                            echo '<option value="' . $categ['id_categorie'] . '">' . $categ['nom_categorie'] . '</option>';
+                        }
+                        ?>
+                </div>
                 <tr>
                     <td><label for="descrip">Description :</label></td>
                     <td>
@@ -124,7 +198,6 @@ if (
                         <span id="erreurDescrip" style="color: red"></span>
                     </td>
                 </tr>
-
 
 
                 <td>

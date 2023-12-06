@@ -1,6 +1,5 @@
 <?php
 
-// require '../config.php';
 
 require __DIR__ . '/../config.php';
 
@@ -11,22 +10,14 @@ class produitC
     public function listProduits($category = null, $sort = null)
 {
     $sql = "SELECT * FROM produit";
-
-    // If a category is provided, add a WHERE clause to filter by category
     if ($category !== null && $category !== 'all') {
         $sql .= " WHERE categorie = :category";
-    }
-
-    // If a sort order is provided, add an ORDER BY clause for sorting by price
-    if ($sort !== null && ($sort === 'asc' || $sort === 'desc')) {
-        $sql .= " ORDER BY prix_prod $sort";
     }
 
     $db = config::getConnexion();
     try {
         $query = $db->prepare($sql);
 
-        // Bind the category parameter if it is provided
         if ($category !== null && $category !== 'all') {
             $query->bindValue(':category', $category);
         }
@@ -35,12 +26,7 @@ class produitC
 
         $liste = $query->fetchAll();
 
-        // If you want statistics, call the listProduitsStatistics function here
-        $statistics = $this->listProduitsStatistics($db);  
-        // Add this line
-
-        // Now, you can use $statistics to get statistics for your chart
-        // For example, you can pass $statistics to your template engine or return it directly
+        $statistics = $this->listProduitsStatistics($db);
 
         return $liste;
     } catch (Exception $e) {
@@ -51,8 +37,7 @@ class produitC
 public function listProduitsStatistics($db)
 {
     try {
-        // Add code here to fetch statistics for the number of products in each category
-        // You can use a similar approach as in the previous examples
+       
         $sql = "SELECT categorie, COUNT(*) as productCount FROM produit GROUP BY categorie";
         $query = $db->prepare($sql);
         $query->execute();
@@ -90,13 +75,6 @@ public function listProduitsStatistics($db)
             throw new Exception('Missing information');
         }
 
-        // // Validate category
-        // $validCategories = ['A', 'B', 'C', 'D', 'E', 'F'];
-        // if (!in_array(strtoupper($produit->getcategorie()), $validCategories)) {
-        //     throw new Exception('Invalid category. Category must be A, B, C, D, E, or F.');
-        // }
-
-
         $sql = "INSERT INTO produit  
         VALUES (NULL, :nom_prod,:image_prod, :quantite,:categorie,:prix_prod,:descrip)";
         $db = config::getConnexion();
@@ -130,16 +108,13 @@ public function listProduitsStatistics($db)
             $produit = $query->fetch();
 
             if (!$produit) {
-                // No record found
                 echo 'No product found with the given ID.';
                 return null;
             }
 
             return $produit;
         } catch (Exception $e) {
-            // Log the error to a file or output it for debugging
             error_log('Error: ' . $e->getMessage());
-            // Output a message to the browser for debugging
             echo 'Error: ' . $e->getMessage();
             return null;
         }
@@ -148,10 +123,6 @@ public function listProduitsStatistics($db)
 
     function updateproduct($produit, $id_produit)
     {
-        $validCategories = ['A', 'B', 'C', 'D', 'E', 'F'];
-        if (!in_array(strtoupper($produit->getcategorie()), $validCategories)) {
-            throw new Exception('Invalid category. Category must be A, B, C, D, E, or F.');
-        }
 
         try {
             $db = config::getConnexion();

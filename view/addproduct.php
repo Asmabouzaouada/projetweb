@@ -116,13 +116,6 @@ if (
                 return false;
             }
 
-            // Validate category
-            // var validCategories = ['A', 'B', 'C', 'D', 'E', 'F'];
-            // if (validCategories.indexOf(categorie.toUpperCase()) === -1) {
-            //     alert("Invalid category. Category must be A, B, C, D, E, or F.");
-            //     return false;
-            // }
-
             // If all checks pass, allow the form to be submitted
             return true;
         }
